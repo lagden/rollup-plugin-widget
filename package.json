@@ -1,0 +1,51 @@
+{
+  "name": "@tadashi/rollup-plugin-widget",
+  "version": "0.1.0",
+  "description": "Generate app widget",
+  "keywords": [
+    "rollup",
+    "plugin",
+    "app",
+    "widget"
+  ],
+  "main": "dist/index.cjs.js",
+  "scripts": {
+    "build": "rollup -c",
+    "pretest": "rm -rf test/__output && npm run build",
+    "test": "ava",
+    "posttest": "rm -rf test/__output",
+    "prepublish": "npm test"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:lagden/rollup-plugin-widget.git"
+  },
+  "author": "Thiago Lagden <lagden@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lagden/rollup-plugin-widget/issues"
+  },
+  "homepage": "https://github.com/lagden/rollup-plugin-widget#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "ava": "3.11.1",
+    "esm": "3.2.25",
+    "rollup": "2.23.1"
+  },
+  "esm": {
+    "cjs": {
+      "dedefault": true
+    }
+  },
+  "ava": {
+    "require": [
+      "esm"
+    ]
+  }
+}
