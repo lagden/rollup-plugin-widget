@@ -1,6 +1,6 @@
 'use strict'
 
-import fs from 'fs'
+import {createWriteStream} from 'fs'
 import {join, dirname} from 'path'
 
 function _snippet(jss, _module) {
@@ -43,7 +43,7 @@ export default function widget(options = {}) {
 				...options.additional,
 				...bundleList
 			]
-			const stream = fs.createWriteStream(join(_dir, options.output))
+			const stream = createWriteStream(join(_dir, options.output))
 			stream.end(_snippet(files, options.esm))
 		}
 	}

@@ -16,7 +16,8 @@ const config = [
 				sourcemap: true,
 				strict: false
 			}
-		]
+		],
+		external: ['fs', 'path']
 	}
 ]
 

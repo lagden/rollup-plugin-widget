@@ -11,9 +11,10 @@
   "main": "dist/index.cjs.js",
   "scripts": {
     "build": "rollup -c",
-    "pretest": "rm -rf test/__output && npm run build",
+    "cleanup": "rm -rf test/__output",
+    "pretest": "npm run cleanup",
     "test": "ava",
-    "posttest": "rm -rf test/__output",
+    "posttest": "npm run cleanup && npm run build",
     "prepublish": "npm test"
   },
   "files": [
