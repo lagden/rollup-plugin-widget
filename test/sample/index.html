@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head lang='en'>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width'>
+	<link rel='icon' type='image/png' href='/favicon.png'>
+	<title>Rollup code-splitting demo</title>
+	<script type="module" src="./out/widget.esm.js"></script>
+	<!-- <script defer src="./out/widget.system.js"></script> -->
+</head>
+<body>
+	<div id='a'>
+		<div data-used-by='a'></div>
+		<div data-used-by='both'></div>
+	</div>
+
+	<div id='b'>
+		<div data-used-by='b'></div>
+		<div data-used-by='both'></div>
+	</div>
+</body>
+</html>

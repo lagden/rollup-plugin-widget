@@ -5,17 +5,26 @@ import {join, dirname} from 'path'
 
 function _snippet(jss, _module) {
 	if (_module) {
-		return `${jss.filter(js => js.isEntry).map(js => `import('${js.path}');`).join('\n')}`
+		return `;(async () => {
+	try {
+		${jss.filter(js => js.isEntry).map(js => `await import('${js.path}')`).join('\n\t\t')}
+	} catch (error) {
+		console.error('@tadashi/rollup-plugin-widget', error)
+	}
+})();
+`
 	}
 
 	return `;(() => {
-		const systemJsLoaderTag = document.createElement('script')
-		systemJsLoaderTag.src = 'https://unpkg.com/systemjs@6.4.3/dist/s.min.js'
-		systemJsLoaderTag.addEventListener('load', () => {
-			${jss.map(js => `System.import('${js.path}');`).join('\n')}
-		})
-		document.head.insertBefore(systemJsLoaderTag, document.head.lastChild)
-	})();`
+	const _tadashiSystemJsLoaderTag = document.createElement('script')
+	_tadashiSystemJsLoaderTag.defer = true
+	_tadashiSystemJsLoaderTag.src = 'https://unpkg.com/systemjs@6.6.1/dist/s.min.js'
+	_tadashiSystemJsLoaderTag.addEventListener('load', () => {
+		${jss.map(js => `System.import('${js.path}')`).join('\n\t\t')}
+	})
+	document.head.append(_tadashiSystemJsLoaderTag)
+})();
+`
 }
 
 export default function widget(options = {}) {
