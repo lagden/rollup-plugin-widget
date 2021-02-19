@@ -3,9 +3,19 @@
 import {createWriteStream} from 'fs'
 import {join, dirname} from 'path'
 
-function _snippet(jss, _module) {
+function _snippet(jss, _module, nodeEnv) {
+	const _data = []
+	if (nodeEnv) {
+		_data.push(
+			"globalThis.process = typeof globalThis.process === 'object' ? globalThis.process : {}",
+			'globalThis.process.env = globalThis.process.env ?? {}',
+			"globalThis.process.env = typeof globalThis.process.env === 'object' ? globalThis.process.env : {}",
+			`globalThis.process.env = {...globalThis.process.env, NODE_ENV: '${nodeEnv}'}`
+		)
+	}
 	if (_module) {
-		return `;(async () => {
+		return `${_data.join('\n')}
+;(async () => {
 	try {
 		${jss.filter(js => js.isEntry).map(js => `await import('${js.path}')`).join('\n\t\t')}
 	} catch (error) {
@@ -15,10 +25,11 @@ function _snippet(jss, _module) {
 `
 	}
 
-	return `;(() => {
+	return `${_data.join('')}
+;(() => {
 	const _tadashiSystemJsLoaderTag = document.createElement('script')
 	_tadashiSystemJsLoaderTag.defer = true
-	_tadashiSystemJsLoaderTag.src = 'https://unpkg.com/systemjs@6.6.1/dist/s.min.js'
+	_tadashiSystemJsLoaderTag.src = 'https://unpkg.com/systemjs@6.8.3/dist/s.min.js'
 	_tadashiSystemJsLoaderTag.addEventListener('load', () => {
 		${jss.map(js => `System.import('${js.path}')`).join('\n\t\t')}
 	})
@@ -32,8 +43,9 @@ export default function widget(options = {}) {
 	options = {
 		output: 'widget.js',
 		additional: [],
-		publicPath: process.cwd(),
-		esm: false,
+		publicPath: '',
+		nodeEnv: '',
+		es: false,
 		...options
 	}
 	return {
@@ -53,7 +65,7 @@ export default function widget(options = {}) {
 				...bundleList
 			]
 			const stream = createWriteStream(join(_dir, options.output))
-			stream.end(_snippet(files, options.esm))
+			stream.end(_snippet(files, options.es, options.nodeEnv))
 		}
 	}
 }

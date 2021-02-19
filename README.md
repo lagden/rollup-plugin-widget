@@ -23,9 +23,10 @@ options   | object | See bellow | Plugin options
 Name       | Type    | Default       | Description
 ---------  | ------  | ----------    | ------------
 output     | string  | widget.js     | Output filename
-publicPath | string  | process.cwd() | Directory where file is published
+publicPath | string  | ''            | Path or URL
 additional | array   | []            | Anothers scripts files to import
-esm        | boolean | false         | Use native import
+nodeEnv    | string  | ''            | Add process.env.NODE_ENV
+es         | boolean | false         | Use native import
 
 
 ## Usage
@@ -40,7 +41,7 @@ rollup({
     widget({
       publicPath: `./public/scripts`,
       output: 'widget.js',
-      esm: true
+      es: true
     })
   ]
 }).then(/* ... */)

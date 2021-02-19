@@ -8,18 +8,19 @@ const widget = require('../src/widget')
 
 const readFileAsync = promisify(readFile)
 
-test('esm', async t => {
-	const format = 'esm'
+test('es', async t => {
+	const format = 'es'
 	const bundle = await rollup({
 		input: [
-			'test/sample/in/main-a.js',
-			'test/sample/in/main-b.js'
+			'test/helper/in/main-a.js',
+			'test/helper/in/main-b.js'
 		],
 		plugins: [
 			widget({
-				publicPath: '/out',
-				output: 'widget.esm.js',
-				esm: format === 'esm'
+				publicPath: '.',
+				output: 'widget.es.js',
+				nodeEnv: 'production',
+				es: format === 'es'
 			})
 		]
 	})
@@ -27,34 +28,26 @@ test('esm', async t => {
 	await bundle.write({
 		entryFileNames: '[name]-[hash].js',
 		chunkFileNames: '[name]-[hash].js',
-		dir: 'test/sample/out',
+		dir: 'test/helper/out',
 		format
 	})
 
-	const _widget = await readFileAsync('./test/sample/out/widget.esm.js', {encoding: 'utf8'})
-	t.is(_widget, `;(async () => {
-	try {
-		await import('/out/main-a-a521ca01.js')
-		await import('/out/main-b-c93de69a.js')
-	} catch (error) {
-		console.error('@tadashi/rollup-plugin-widget', error)
-	}
-})();
-`)
+	const _widget = await readFileAsync('./test/helper/out/widget.es.js', {encoding: 'utf8'})
+	t.snapshot(_widget)
 })
 
 test('system', async t => {
 	const format = 'system'
 	const bundle = await rollup({
 		input: [
-			'test/sample/in/main-a.js',
-			'test/sample/in/main-b.js'
+			'test/helper/in/main-a.js',
+			'test/helper/in/main-b.js'
 		],
 		plugins: [
 			widget({
 				publicPath: '/out',
 				output: 'widget.system.js',
-				esm: format === 'esm'
+				es: format === 'es'
 			})
 		]
 	})
@@ -62,21 +55,10 @@ test('system', async t => {
 	await bundle.write({
 		entryFileNames: '[name]-[hash].js',
 		chunkFileNames: '[name]-[hash].js',
-		dir: 'test/sample/out',
+		dir: 'test/helper/out',
 		format
 	})
 
-	const _widget = await readFileAsync('./test/sample/out/widget.system.js', {encoding: 'utf8'})
-	t.is(_widget, `;(() => {
-	const _tadashiSystemJsLoaderTag = document.createElement('script')
-	_tadashiSystemJsLoaderTag.defer = true
-	_tadashiSystemJsLoaderTag.src = 'https://unpkg.com/systemjs@6.6.1/dist/s.min.js'
-	_tadashiSystemJsLoaderTag.addEventListener('load', () => {
-		System.import('/out/main-a-c53681a5.js')
-		System.import('/out/main-b-563f696c.js')
-		System.import('/out/used-by-both-5f3501f5.js')
-	})
-	document.head.append(_tadashiSystemJsLoaderTag)
-})();
-`)
+	const _widget = await readFileAsync('./test/helper/out/widget.system.js', {encoding: 'utf8'})
+	t.snapshot(_widget)
 })
