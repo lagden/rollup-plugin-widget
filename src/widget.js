@@ -31,7 +31,7 @@ export default function widget(options = {}) {
 				.filter(f => !bundle[f].isDynamicEntry)
 				.map(f => ({
 					isEntry: bundle[f].isEntry,
-					pathname: `${options.path}${f}`,
+					pathname: `${options.path}/${f}`,
 				}))
 
 			const files = [
