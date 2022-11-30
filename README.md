@@ -23,6 +23,7 @@ options   | object | See bellow | Plugin options
 Name       | Type    | Default       | Description
 ---------  | ------  | ----------    | ------------
 output     | string  | widget.js     | Output filename
+path       | string  | .             | Path
 more       | array   | []            | Anothers scripts files to import
 
 

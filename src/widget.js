@@ -18,6 +18,7 @@ function createFile(output, files) {
 export default function widget(options = {}) {
 	options = {
 		output: 'widget.js',
+		path: '.',
 		more: [],
 		...options,
 	}
@@ -30,7 +31,7 @@ export default function widget(options = {}) {
 				.filter(f => !bundle[f].isDynamicEntry)
 				.map(f => ({
 					isEntry: bundle[f].isEntry,
-					pathname: f,
+					pathname: `${options.path}${f}`,
 				}))
 
 			const files = [
